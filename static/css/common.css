@@ -1,0 +1,13 @@
+#urls {
+	border: 1px solid #ccc;
+	min-height: 50px;
+	margin-bottom: 20px;
+	padding: 10px;
+	border-radius: 3px;
+	box-shadow: inset 0px 0px 20px 10px rgba(0, 0, 0, 0.1);
+}
+
+.url-holder>.col-md-4, .url-holder>.col-md-8 {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}

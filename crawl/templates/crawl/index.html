@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Crawling...</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/common.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/crawl.css">
+	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="page-header">
+					Crawl Web
+					<span class="status-text running" style="font-size: 16px;">Running...</span>
+				</h1>
+				<button id="btn-stop" class="btn btn-danger pull-right">Stop</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1">
+						<b>Seed URLs</b>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1">
+						<ol>
+						    {% for url in urls %}
+						    <li><a href="{{url}}" style="color: black;">{{url}}</a></li>
+						    {% endfor %}
+						</ol>
+					</div>
+				</div>
+				<div class="row">
+				    <div class="col-md-10 col-md-offset-2">
+				    	<div class="document-count" id="document-count"></div>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var errors = 0;
+			var I = setInterval(function() {
+				$.ajax({
+					url: '/crawl/status',
+					dataType: 'text',
+					success: function(result) {
+						errors = 0;
+						$("#document-count").html(result);
+					},
+					error: function (e) {
+						if (errors > 4) {
+							$(".status-text").html("Error");
+							clearInterval(I);
+						}
+						errors++;
+					}
+				})
+			}, 2000);
+			$("#btn-stop").click(function() {
+				$.ajax({
+					url: "/crawl/stop",
+					dataType: "text",
+					success: function(result) {
+						$(".status-text").html("Stopped");
+						$(".status-text").addClass("stopped").removeClass("running");
+						clearInterval(I);
+					},
+					error: function(e) {
+						console.log(error);
+					}
+				})
+			})
+		})
+	</script>
+</body>
+</html>
